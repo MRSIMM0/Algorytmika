@@ -29,12 +29,13 @@ def compare(listOfAlgorithms,testCases,setRange,multiply):
         
         set = generateRandomSet(setRange)
       
-        algs  = [(alg.name,getTime(lambda: alg.func)) for alg in listOfAlgorithms]
+        algs  = [(alg.name,getTime(lambda: alg.func(set))) for alg in listOfAlgorithms]
         try:
             result["tests"][x].append(algs)
         except:
             result["tests"][x] = {"setSize":setRange,"algorithms":algs}
         setRange = setRange*multiply
+
     return result
 def showResultsTable(data,algorightms):
     """
@@ -60,9 +61,8 @@ def showResultsTable(data,algorightms):
 
 def main():
     algorightms = [insertionSort,bobbleSort,selectionSort]
-    print(showResultsTable(compare(algorightms,15,100,2),algorightms))
+    print(showResultsTable(compare(algorightms,1,6400,1),algorightms))
     
-# getTime(lambda: insertionSort.insertionSort(arr))
 main()
 
 
