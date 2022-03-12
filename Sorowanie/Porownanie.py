@@ -2,6 +2,8 @@ import time
 import insertionSort,bobbleSort,selectionSort
 import random
 from prettytable import PrettyTable
+from visualization import visualization
+
 tId = time.CLOCK_PROCESS_CPUTIME_ID
 
 
@@ -34,7 +36,7 @@ def compare(listOfAlgorithms,testCases,setRange,multiply):
             result["tests"][x].append(algs)
         except:
             result["tests"][x] = {"setSize":setRange,"algorithms":algs}
-        setRange = setRange*multiply
+        setRange = int(setRange*multiply)
 
     return result
 def showResultsTable(data,algorightms):
@@ -59,10 +61,12 @@ def showResultsTable(data,algorightms):
 
 
 
-def main():
-    algorightms = [insertionSort,bobbleSort,selectionSort]
-    print(showResultsTable(compare(algorightms,1,6400,1),algorightms))
-    
-main()
+algorightms = [insertionSort,bobbleSort,selectionSort]
 
+data = compare(algorightms,15,1000,1.2)
+
+# print(showResultsTable(data,algorightms))
+    
+
+visualization(data,algorightms)
 
