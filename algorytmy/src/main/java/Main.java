@@ -18,6 +18,7 @@ class Task2 {
         this.binSearchTime = binSearchTime;
     }
 
+
     @Override
     public String toString() {
         return "Task2{" +
@@ -25,6 +26,27 @@ class Task2 {
                 ", sortingTime=" + sortingTime +
                 ", basicSearchTime=" + basicSearchTime +
                 ", binSearchTime=" + binSearchTime +
+                '}';
+    }
+}
+
+class Task3 {
+    long time;
+    int height;
+    long searchTime;
+
+    public Task3(long time, int height, long searchTime) {
+        this.time = time;
+        this.height = height;
+        this.searchTime = searchTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Task3{" +
+                "time=" + time +
+                ", height=" + height +
+                ", searchTime=" + searchTime +
                 '}';
     }
 }
@@ -80,22 +102,22 @@ public class Main {
     }
 
     public static Integer[] copyTableAndSort(Integer[] arr) {
-        Integer[] copy = Arrays.copyOf(arr,arr.length);
-        quickSort(copy,0,copy.length-1);
+        Integer[] copy = Arrays.copyOf(arr, arr.length);
+        quickSort(copy, 0, copy.length - 1);
         return copy;
     }
 
-    public static int basicSearch(Integer[] arr,int key){
-        for(int i = 0; i<arr.length-1;i++){
-            if(arr[i] == key) return i;
+    public static int basicSearch(Integer[] arr, int key) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            if (arr[i] == key) return i;
         }
         return -1;
     }
 
-    public static long basicSearchTime(Integer[] A,Integer[] B){
+    public static long basicSearchTime(Integer[] A, Integer[] B) {
         Instant start = Instant.now();
-        for(int i =0; i<A.length-1;i++){
-            basicSearch(A,B[i]);
+        for (int i = 0; i < A.length - 1; i++) {
+            basicSearch(A, B[i]);
         }
         Instant end = Instant.now();
         return Duration.between(start, end).toMillis();
@@ -106,7 +128,7 @@ public class Main {
         int index = Integer.MAX_VALUE;
 
         while (low <= high) {
-            int mid = low  + ((high - low) / 2);
+            int mid = low + ((high - low) / 2);
             if (sortedArray[mid] < key) {
                 low = mid + 1;
             } else if (sortedArray[mid] > key) {
@@ -119,10 +141,10 @@ public class Main {
         return index;
     }
 
-    public static long binarySearchTime(Integer[] A,Integer[] B){
+    public static long binarySearchTime(Integer[] A, Integer[] B) {
         Instant start = Instant.now();
-        for(int i = 0; i<A.length-1;i++){
-            binSearch(B,A[i],0,A.length-1);
+        for (int i = 0; i < A.length - 1; i++) {
+            binSearch(B, A[i], 0, A.length - 1);
         }
         Instant end = Instant.now();
         return Duration.between(start, end).toMillis();
@@ -133,13 +155,89 @@ public class Main {
         var sorted = copyTableAndSort(array);
         Instant end = Instant.now();
         var time = Duration.between(start, end).toMillis();
-        return new Task2(sorted,time,basicSearchTime(array,sorted),binarySearchTime(array,sorted));
+        return new Task2(sorted, time, basicSearchTime(array, sorted), binarySearchTime(array, sorted));
+    }
+
+
+    static class Node {
+        int data;
+        Node left = null;
+        Node right = null;
+
+        public Node(int data) {
+            this.data = data;
+        }
+    }
+
+    public static Node insert(Node node, int data) {
+        if (node == null) {
+            return new Node(data);
+        }
+        if (data > node.data) {
+            node.right = insert(node.right, data);
+        }
+        if (data < node.data) {
+            node.left = insert(node.left, data);
+        }
+        return node;
+    }
+
+    public static Node buildBST(Integer[] arr) {
+        Node root = new Node(arr[0]);
+        for (int i = 0; i < arr.length - 1; i++) {
+            root = insert(root, arr[i]);
+        }
+        return root;
+    }
+
+    public static int bstHeight(Node bst) {
+        if (bst == null) return 0;
+        else return 1 + Math.max(bstHeight(bst.left), bstHeight(bst.right));
+    }
+
+    public static Node search(Node root, int key) {
+        if (root == null || root.data == key)
+            return root;
+
+
+        if (root.data < key)
+            return search(root.right, key);
+
+
+        return search(root.left, key);
+    }
+
+    public static long searchTime(Node bst, Integer[] A) {
+        Instant start = Instant.now();
+        for (int i = 0; i < A.length - 1; i++) {
+            search(bst, A[i]);
+        }
+        Instant end = Instant.now();
+        return Duration.between(start, end).toMillis();
+    }
+
+
+    public static Task3 getThirdTask(Integer[] A) {
+        Instant start = Instant.now();
+        Node node = buildBST(A);
+        Instant end = Instant.now();
+        var timeC = Duration.between(start, end).toMillis();
+
+        var height = bstHeight(node);
+
+        var searchTime = searchTime(node, A);
+
+        return new Task3(timeC, height, searchTime);
     }
 
     public static void main(String[] args) throws Exception {
         var list = generateRandomArray(60000, 1, 10000000);
         var task2 = getSecondTask(list);
+        var sortedList = task2.sortedList;
+
         System.out.println(task2.toString());
+        
+        var task3 = getThirdTask(list);
 
     }
 }
