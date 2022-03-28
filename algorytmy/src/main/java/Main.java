@@ -30,12 +30,12 @@ class Task2 {
     }
 }
 
-class Task3 {
+class Task3i4 {
     long time;
     int height;
     long searchTime;
 
-    public Task3(long time, int height, long searchTime) {
+    public Task3i4(long time, int height, long searchTime) {
         this.time = time;
         this.height = height;
         this.searchTime = searchTime;
@@ -52,6 +52,7 @@ class Task3 {
 }
 
 public class Main {
+    static ArrayList<Integer> midTable = new ArrayList<>();
 
     public static void quickSort(Integer[] arr, int start, int end) {
 
@@ -123,12 +124,12 @@ public class Main {
         return Duration.between(start, end).toMillis();
     }
 
-    public static int binSearch(
-            Integer[] sortedArray, int key, int low, int high) {
+    public static int binSearch(Integer[] sortedArray, int key, int low, int high) {
         int index = Integer.MAX_VALUE;
 
         while (low <= high) {
             int mid = low + ((high - low) / 2);
+            midTable.add(mid);
             if (sortedArray[mid] < key) {
                 low = mid + 1;
             } else if (sortedArray[mid] > key) {
@@ -198,12 +199,8 @@ public class Main {
     public static Node search(Node root, int key) {
         if (root == null || root.data == key)
             return root;
-
-
         if (root.data < key)
             return search(root.right, key);
-
-
         return search(root.left, key);
     }
 
@@ -216,8 +213,7 @@ public class Main {
         return Duration.between(start, end).toMillis();
     }
 
-
-    public static Task3 getThirdTask(Integer[] A) {
+    public static Task3i4 getThirdTask(Integer[] A) {
         Instant start = Instant.now();
         Node node = buildBST(A);
         Instant end = Instant.now();
@@ -227,17 +223,41 @@ public class Main {
 
         var searchTime = searchTime(node, A);
 
-        return new Task3(timeC, height, searchTime);
+        return new Task3i4(timeC, height, searchTime);
+    }
+    public static long getSearchTime(Integer[] A,Node B){
+        Instant start = Instant.now();
+        for(int i = 0; i < A.length; i++){
+            search(B,A[i]);
+        }
+        Instant end = Instant.now();
+        return Duration.between(start,end).toMillis();
+    }
+
+    //    TODO
+    public static Task3i4 getForthTask(Integer[] A) {
+        var B = midTable.toArray(new Integer[0]);
+        System.out.println(B.length);
+        Instant start = Instant.now();
+        var optimased = buildBST(B);
+        Instant end = Instant.now();
+        var time = Duration.between(start,end).toMillis();
+        var height = bstHeight(optimased);
+
+        return new Task3i4(time,height,getSearchTime(A,optimased));
     }
 
     public static void main(String[] args) throws Exception {
-        var list = generateRandomArray(60000, 1, 10000000);
+        var list = generateRandomArray(20000, 1, 10000000);
         var task2 = getSecondTask(list);
         var sortedList = task2.sortedList;
 
         System.out.println(task2.toString());
-        
-        var task3 = getThirdTask(list);
 
+        var task3 = getThirdTask(list);
+        System.out.println(task3.toString());
+
+        var task4 =  getForthTask(list);
+        System.out.println(task4.toString());
     }
 }
