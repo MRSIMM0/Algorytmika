@@ -21,12 +21,12 @@ class Task2 {
 
     @Override
     public String toString() {
-        return "Task2{" +
-                "sortedList=" + sortedList +
-                ", sortingTime=" + sortingTime +
-                ", basicSearchTime=" + basicSearchTime +
-                ", binSearchTime=" + binSearchTime +
-                '}';
+        return
+
+                        sortingTime + "\n" +
+                        basicSearchTime + "\n" +
+                        binSearchTime
+                ;
     }
 }
 
@@ -43,11 +43,10 @@ class Task3i4 {
 
     @Override
     public String toString() {
-        return "Task3{" +
-                "time=" + time +
-                ", height=" + height +
-                ", searchTime=" + searchTime +
-                '}';
+        return
+                time + "\n" +
+                        height + "\n" +
+                        searchTime;
     }
 }
 
@@ -225,39 +224,43 @@ public class Main {
 
         return new Task3i4(timeC, height, searchTime);
     }
-    public static long getSearchTime(Integer[] A,Node B){
+
+    public static long getSearchTime(Integer[] A, Node B) {
         Instant start = Instant.now();
-        for(int i = 0; i < A.length; i++){
-            search(B,A[i]);
+        for (int i = 0; i < A.length; i++) {
+            search(B, A[i]);
         }
         Instant end = Instant.now();
-        return Duration.between(start,end).toMillis();
+        return Duration.between(start, end).toMillis();
     }
 
     //    TODO
     public static Task3i4 getForthTask(Integer[] A) {
         var B = midTable.toArray(new Integer[0]);
-        System.out.println(B.length);
         Instant start = Instant.now();
         var optimased = buildBST(B);
         Instant end = Instant.now();
-        var time = Duration.between(start,end).toMillis();
+        var time = Duration.between(start, end).toMillis();
         var height = bstHeight(optimased);
 
-        return new Task3i4(time,height,getSearchTime(A,optimased));
+        return new Task3i4(time, height, getSearchTime(A, optimased));
     }
 
     public static void main(String[] args) throws Exception {
-        var list = generateRandomArray(20000, 1, 10000000);
+        //tu zmieniasz rozmiar
+        int setSize = 20000;
+
+        var list = generateRandomArray(setSize, 1, 10000000);
         var task2 = getSecondTask(list);
         var sortedList = task2.sortedList;
-
+        System.out.println(setSize);
+        System.out.println(" ");
         System.out.println(task2.toString());
-
+        System.out.println(" ");
         var task3 = getThirdTask(list);
         System.out.println(task3.toString());
-
-        var task4 =  getForthTask(list);
+        System.out.println(" ");
+        var task4 = getForthTask(list);
         System.out.println(task4.toString());
     }
 }
